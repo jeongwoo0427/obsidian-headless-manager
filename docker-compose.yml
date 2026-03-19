@@ -3,10 +3,12 @@ services:
     build: ./sync
     container_name: obsidian-sync
     restart: unless-stopped
+    user: "${PUID:-1000}:${PGID:-1000}"
     volumes:
       - ./data/vault:/vault
-      - ./data/obsidian-config:/root/.config/obsidian-headless
+      - ./data/obsidian-config:/obsidian-home/.config/obsidian-headless
     environment:
+      - HOME=/obsidian-home
       - OBSIDIAN_VAULT_NAME=${OBSIDIAN_VAULT_NAME:-}
       - OBSIDIAN_DEVICE_NAME=${OBSIDIAN_DEVICE_NAME:-}
       - OBSIDIAN_E2E_PASSWORD=${OBSIDIAN_E2E_PASSWORD:-}
