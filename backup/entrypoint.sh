@@ -23,6 +23,7 @@ cat > /etc/crontabs/root << 'EOF'
 # 영구백업: 매월 1일 새벽 1시 실행, 삭제 안 함
 0 1 1 * * /backup.sh permanent
 EOF
+chmod 644 /etc/crontabs/root
 
 echo "백업 스케줄러 시작"
 echo "  타임백업  : 매시 정각 (30시간 보관)"
