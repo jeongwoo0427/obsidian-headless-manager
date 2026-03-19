@@ -1,6 +1,15 @@
 #!/bin/sh
 set -e
 
+PUID=${PUID:-1000}
+PGID=${PGID:-1000}
+
+# 데이터 디렉토리 소유권을 실행 유저로 설정 (root로 실행 중일 때만)
+if [ "$(id -u)" = "0" ]; then
+    chown -R "$PUID:$PGID" /vault /home/node/.config
+    exec su-exec "$PUID:$PGID" "$0" "$@"
+fi
+
 # 인자가 있으면 직접 실행 (ob login, ob sync-setup 등)
 if [ $# -gt 0 ]; then
     exec "$@"
