@@ -1,14 +1,18 @@
 #!/bin/sh
 set -e
 
-# 타임존 설정
+PUID=${PUID:-1000}
+PGID=${PGID:-1000}
+
+# 타임존 설정 (root 필요)
 ln -snf /usr/share/zoneinfo/${TZ:-Asia/Seoul} /etc/localtime
 echo "${TZ:-Asia/Seoul}" > /etc/timezone
 
-# 백업 디렉토리 생성
+# 백업 디렉토리 생성 및 소유권 설정
 mkdir -p /backups/hourly /backups/daily /backups/permanent
+chown -R "$PUID:$PGID" /backups
 
-# 크론탭 등록
+# 크론탭 등록 (root 필요)
 cat > /etc/crontabs/root << 'EOF'
 # 타임백업: 매시 정각 실행, 30시간 보관
 0 * * * * /backup.sh hourly 30
@@ -25,4 +29,4 @@ echo "  타임백업  : 매시 정각 (30시간 보관)"
 echo "  데일리백업: 매일 자정  (30일 보관)"
 echo "  영구백업  : 매월 1일   (영구 보관)"
 
-exec supercronic /etc/crontabs/root
+exec su-exec "$PUID:$PGID" supercronic /etc/crontabs/root

@@ -26,9 +26,9 @@ services:
       - obsidian-sync
     volumes:
       - ./data/vault:/vault:ro
-      - ./data/backups/hourly:/backups/hourly
-      - ./data/backups/daily:/backups/daily
-      - ./data/backups/permanent:/backups/permanent
+      - ./data/backups:/backups
     environment:
       - TZ=${TZ:-Asia/Seoul}
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
       - BACKUP_PASSWORD=${BACKUP_PASSWORD:-}
