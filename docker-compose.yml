@@ -33,3 +33,4 @@ services:
       - ./data/backups/permanent:/backups/permanent
     environment:
       - TZ=${TZ:-Asia/Seoul}
+      - BACKUP_PASSWORD=${BACKUP_PASSWORD:-}
