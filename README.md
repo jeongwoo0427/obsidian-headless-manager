@@ -78,6 +78,7 @@ Logged in as Username (your@email.com)
 ### 5. 정상 동작 확인
 
 ```bash
+docker compose restart
 docker compose logs -f
 ```
 
