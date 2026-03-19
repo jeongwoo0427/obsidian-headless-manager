@@ -8,6 +8,13 @@ services:
       - ./data/obsidian-config:/root/.config/obsidian-headless
     environment:
       - OBSIDIAN_VAULT_NAME=${OBSIDIAN_VAULT_NAME:-}
+      - OBSIDIAN_DEVICE_NAME=${OBSIDIAN_DEVICE_NAME:-}
+      - OBSIDIAN_E2E_PASSWORD=${OBSIDIAN_E2E_PASSWORD:-}
+      - SYNC_CONFIGS=${SYNC_CONFIGS:-}
+      - SYNC_FILE_TYPES=${SYNC_FILE_TYPES:-}
+      - SYNC_CONFLICT_STRATEGY=${SYNC_CONFLICT_STRATEGY:-}
+      - SYNC_MODE=${SYNC_MODE:-}
+      - SYNC_EXCLUDED_FOLDERS=${SYNC_EXCLUDED_FOLDERS:-}
     stdin_open: true
     tty: true
 
