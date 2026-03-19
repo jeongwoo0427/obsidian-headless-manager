@@ -1,0 +1,26 @@
+services:
+  obsidian-sync:
+    build: ./sync
+    container_name: obsidian-sync
+    restart: unless-stopped
+    volumes:
+      - ./data/vault:/vault
+      - ./data/obsidian-config:/root/.config/obsidian-headless
+    environment:
+      - OBSIDIAN_VAULT_NAME=${OBSIDIAN_VAULT_NAME:-}
+    stdin_open: true
+    tty: true
+
+  backup:
+    build: ./backup
+    container_name: obsidian-backup
+    restart: unless-stopped
+    depends_on:
+      - obsidian-sync
+    volumes:
+      - ./data/vault:/vault:ro
+      - ./data/backups/hourly:/backups/hourly
+      - ./data/backups/daily:/backups/daily
+      - ./data/backups/permanent:/backups/permanent
+    environment:
+      - TZ=${TZ:-Asia/Seoul}
