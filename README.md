@@ -26,6 +26,9 @@ nano .env
 | 변수 | 설명 |
 |------|------|
 | `TZ` | 타임존 (기본: `Asia/Seoul`) |
+| `PUID` | 볼트 파일 소유자 UID (`id -u` 로 확인) |
+| `PGID` | 볼트 파일 소유자 GID (`id -g` 로 확인) |
+| `BACKUP_PASSWORD` | 백업 암호화 비밀번호 (비워두면 암호화 안 함) |
 | `OBSIDIAN_VAULT_NAME` | 싱크할 볼트 이름 |
 | `OBSIDIAN_DEVICE_NAME` | 이 서버를 식별할 이름 (예: `home-server`) |
 | `OBSIDIAN_E2E_PASSWORD` | E2E 암호화 비밀번호 (E2E 사용 시) |
@@ -35,10 +38,15 @@ nano .env
 | `SYNC_MODE` | 싱크 모드: `bidirectional`(기본) / `pull-only` / `mirror-remote` |
 | `SYNC_EXCLUDED_FOLDERS` | 싱크 제외 폴더 (쉼표 구분) |
 
-**설정 예시 (커뮤니티 플러그인 + 모든 첨부파일 타입):**
+**설정 예시:**
 
 ```env
 TZ=Asia/Seoul
+
+PUID=1000   # $(id -u)
+PGID=1000   # $(id -g)
+
+BACKUP_PASSWORD=mysecretpassword   # 비워두면 암호화 안 함
 
 OBSIDIAN_VAULT_NAME=MyVault
 OBSIDIAN_DEVICE_NAME=home-server
@@ -103,7 +111,7 @@ obsidian-backup  |   영구백업  : 매월 1일   (영구 보관)
 
 ## 백업
 
-싱크된 노트는 3단계로 자동 백업됩니다.
+싱크된 노트는 3단계로 자동 백업됩니다. 모든 백업 파일은 `.7z` 포맷이며, `BACKUP_PASSWORD` 설정 시 AES-256으로 암호화됩니다.
 
 | 이름 | 주기 | 보관 | 저장 위치 |
 |------|------|------|-----------|
@@ -122,7 +130,11 @@ docker compose exec backup /backup.sh permanent
 **백업 복원**
 
 ```bash
-tar -xzf ./data/backups/daily/obsidian_daily_20260319.tar.gz -C /복원할/경로/
+# 비밀번호 없는 경우
+7z x ./data/backups/daily/obsidian_daily_20260319.7z -o/복원할/경로/
+
+# 비밀번호 있는 경우
+7z x ./data/backups/daily/obsidian_daily_20260319.7z -p"비밀번호" -o/복원할/경로/
 ```
 
 ---
